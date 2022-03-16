@@ -8,11 +8,9 @@
 </head>
 <body>
     <form action="/risultato" method = "GET">
-    <p>Squadra <input type = "text" name = "Squadra" /></p>
-    <p>Anno <input type = "text" name = "Anno" /></p>
-    <p>Citta <input type = "text" name = "Citta" /></p>
-
-    <p><input type = "submit" value = "Submit" /></p> 
+        <p>Seleziona indice: <input type = "radio" name = "sel" value="squadra" required/>squadra <input type = "radio" name = "sel" value="anno" required/> anno <input type = "radio" name = "sel" value="citta" required/>citta
+            <p>Indice <input type = "text" name = "Indice" required/></p>
+            <p><input type = "submit" value = "Submit" /></p> 
     </form>
 </body>
 </html>

@@ -36,14 +36,15 @@ def ricerca():
 
 @app.route('/risultato', methods=['GET'])
 def risultato():
-    squadra = request.args['Squadra']
-    anno = request.args['Anno']
-    citta = request.args['Citta']
-    if (len(squadra) != 0):
+    
+    df1 = pd.read_csv('/workspace/flask/templates/dati.csv')
+    #if (len(squadra) != 0):
         # cerchiamo tutte le informazioni sulla squadra inserita dall'utente 
-        anno = df1[df1['squadra'] == squadra ]['anno']
-        
-    return render_template('ricerca.html')
+       # anno = df1[df1['squadra'] == squadra ]['anno']
+    indice= request.args['Indice']
+    risultato= request.args['sel']
+    df2= df1[df1[risultato] == indice]
+    return df2.to_html()
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=3246, debug=True)
