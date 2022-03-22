@@ -38,9 +38,6 @@ def ricerca():
 def risultato():
     
     df1 = pd.read_csv('/workspace/flask/templates/dati.csv')
-    #if (len(squadra) != 0):
-        # cerchiamo tutte le informazioni sulla squadra inserita dall'utente 
-       # anno = df1[df1['squadra'] == squadra ]['anno']
     indice= request.args['Indice']
     risultato= request.args['sel']
     df2= df1[df1[risultato] == indice]
