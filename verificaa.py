@@ -1,24 +1,50 @@
-from flask import Flask, render_template, send_file, make_response, url_for, Response, request
+from flask import Flask, render_template, request, Response
 app = Flask(__name__)
 
-import io
-import geopandas as gpd
-import contextily
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 
-stazioni = gpd.read_csv('/workspace/flask/coordfix_ripetitori_radiofonici_milano_160120_loc_final.csv')
+import matplotlib.pyplot as plt
+import matplotlib
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import contextily
+import geopandas as gpd
+import io
+import pandas as pd
+
+stazioni = pd.read_csv("/workspace/flask/coordfix_ripetitori_radiofonici_milano_160120_loc_final.csv",sep= ";")
+
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('home.html')
+    return render_template("home.html")
 
 @app.route('/numero', methods=['GET'])
-def home():
-    return render_template('home.html')
+def numero():
+#numero stazioni per ogni munnicipio
+    global risultato
+    risultato = stazioni.groupby("MUNICIPIO")["OPERATORE"].count().reset_index()
+
+    return render_template("link1.html",risultato = risultato.to_html())
+
+@app.route('/grafico', methods=['GET'])
+def grafico():
+    #costruzione del grafico
+    fig, ax = plt.subplots(figsize = (6,4))
+
+    x = risultato.MUNICIPIO.astype(str) 
+    y = risultato.OPERATORE
+
+    ax.bar(x, y, color = "#304C89")
+    #visualizzazione del grafico
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')
+    
+
+
+
+
+
 
 if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=3245, debug=True)
+    app.run(host='0.0.0.0', port=3245, debug=True)
